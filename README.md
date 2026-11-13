@@ -1,6 +1,6 @@
 # Picar-X
 
-Picar-X Python library for Raspberry Pi.
+This is where we will work on the final projects for Fuzzy Logic
 
 ## Links
 
@@ -9,50 +9,6 @@ Picar-X Python library for Raspberry Pi.
 - Forum: <https://forum.sunfounder.com/>
 - Sunfounder: <https://www.sunfounder.com/>
 
-## Installation
-
- > **Note**
-  You also need to install robot_hat, vilib, sunfounder_controller and other dependent libraries.\
-  <https://docs.sunfounder.com/projects/picar-x-v20/en/latest/python/python_start/install_all_modules.html>
-
-```bash
-# Install robot_hat
-git clone --depth 1 -b 2.5.x https://github.com/sunfounder/robot-hat.git
-cd robot-hat
-sudo python3 install.py
-
-# Install vilib
-git clone --depth 1 https://github.com/sunfounder/vilib.git
-cd vilib
-sudo python3 install.py
-
-# Install picar-x
-git clone -b 2.1.x https://github.com/sunfounder/picar-x.git
-cd picar-x
-sudo pip3 install . --break
-```
-
-## Debug
-
-Debug command records
-
-```bash
-cd ~/picar-x && sudo pip3 install . --break --no-deps --no-build-isolation
-```
-
-## Debug records
-
-```bash
-sudo pip3 uninstall picar-x --break -y && cd ~/picar-x && sudo pip3 install . --break --no-deps --no-build-isolation
-sudo pip3 uninstall robot_hat --break -y && cd ~/robot-hat && sudo pip3 install . --break --no-deps --no-build-isolation
-sudo python3 ~/picar-x/examples/14_voice_active_car_gpt.py
-```
-
-----------------------------------------------
-
-## About SunFounder
-
-SunFounder is a technology company focused on Raspberry Pi and Arduino open source community development. Committed to the promotion of open source culture, we strives to bring the fun of electronics making to people all around the world and enable everyone to be a maker. Our products include learning kits, development boards, robots, sensor modules and development tools. In addition to high quality products, SunFounder also offers video tutorials to help you make your own project. If you have interest in open source or making something cool, welcome to join us!
 
 ----------------------------------------------
 
@@ -76,7 +32,7 @@ Email: service@sunfounder.com, support@sunfounder.com
 
 ----------------------------------------------
 
-## Contact us
+## Sunfounder Contact Information
 
 website:
     www.sunfounder.com
