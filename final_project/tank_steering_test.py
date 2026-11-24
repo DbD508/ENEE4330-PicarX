@@ -13,11 +13,15 @@ def main():
         while True:
                     px.set_dir_servo_angle(0)
                     px.forward(POWER/2)
-                    time.sleep(0.5)
-                    px.set_dir_servo_angle(15)
-                    px.set_motor_speed(1, -20)
-                    px.set_motor_speed(2, 25)
-                    time.sleep(0.5)
+                    time.sleep(1.5)
+                    px.set_dir_servo_angle(30)
+                    px.set_motor_speed(1, 80)
+                    px.set_motor_speed(2, 80)
+                    time.sleep(1)
+                    px.set_dir_servo_angle(-30)
+                    px.set_motor_speed(1, -80)
+                    px.set_motor_speed(2, -80)
+                    time.sleep(1)
                     
     except KeyboardInterrupt:
         print("Stopping obstacle avoidance")
