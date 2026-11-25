@@ -20,36 +20,36 @@ def torque_vectored_steering(severity: float, direction: str):
 			TypeError: 'severity' is not 'float' or 'direction' is not 'string'
     """
     # Error Handling
-    if severity = 0:
+    if severity == 0:
 		return
     if type(severity) != float:
 		raise TypeError('Invalid function input: allowable datatype for severity is float')
 	if type(direction) != str:
 		raise TypeError('Invalid function input: allowable datatype for direction is string')
-	if direction != 'right' or direction != 'left':
+	if direction != 'right' and direction != 'left':
 		raise NameError('Invalid function input: valid directions are left and right')
 
 	# 				"IO table" 
 	#		(F=forward, R=Reverse, l=left, r=right)
 	#			F-l		F-r		R-l		R-r
 	# Wheels	l		r		r		l
-	# rMotor	F		R		F		R
-	# lMotor	R		F		R		F
+	# M_right	F		R		F		R
+	# M_left	R		F		R		F
 	
 	# If this is broken out into individual logical equations,
 		# Output: wheels left. Input: desired direction
 			# Wheels,l = F-l or R-r							(1)
-		# Output: rMotor forward. Input: desired direction
-			# rMotor,F = l									(2)
-		# Output: lMotor forward. Input: desired direction
-			# lMotor,F = r									(3)
+		# Output: M_right forward. Input: desired direction
+			# M_right,F = l									(2)
+		# Output: M_left forward. Input: desired direction
+			# M_left,F = r									(3)
 
 		# First, severity must be clamped to +/- 100
 	severity_clamped=max(-100, min(severity, 100))
 		# We will assign 1 = forward, -1 = reverse
-	direction = severity*(severity**2)**(-1/2) # severity/abs(severity)=sign(severity)
+	severity_sign = severity*(severity**2)**(-1/2) # severity/abs(severity)=sign(severity)
 		# Now we assign -1 = left and 1 = right
-	if direction = right:
+	if direction == 'right':
 		angle_modifier = 1
 	else:
 		angle_modifier = -1
@@ -57,7 +57,7 @@ def torque_vectored_steering(severity: float, direction: str):
 		# Referring to (1), and with the knowledge that negative servo 
 		# angle corresponds to "wheels, left", we can create a simple 
 		# assignment for the steering angle
-	angle = angle_modifier*direction*DIR_MAX	# macro encodes +/-30 degree limit
+	angle = angle_modifier*severity_sign*DIR_MAX	# macro encodes +/-30 degree limit
 	px.set_dir_servo_angle(angle)				# Set steering servo angle
 	
 	# The motors are mounted physically opposing one another, so setting
@@ -69,16 +69,31 @@ def torque_vectored_steering(severity: float, direction: str):
 	# 				"Augmented IO table" 
 	#		(F=forward, R=Reverse, l=left, r=right)
 	#			F-l		F-r		R-l		R-r
-	# rMotor	F		R+		F+		R
-	# lMotor	R+		F		R		F+
+	# M_right	F		R+		F+		R
+	# M_left	R+		F		R		F+
 
-	# 
+	# If we assign a variable P_ml to the condition "increased motor 
+	# power, left" , we can draw out a relationship where:
 	
-	# Now we will set each wheel's power:
-	left_power  = 
-	right_power = 
+	# P_ml = F-l + R-r							(4)
+	# P_mr = F-r + R-l							(5)
+	
+	# Now, using the logical variables for steering which assigned 1 to
+	# Forward and right, and -1 to Reverse and left:	
+	left_power  = severity_clamped*((angle_modifier + severity_sign)*0.2+(angle_modifier - severity_sign)*0.8)
+	right_power = severity_clamped*((direction + severity_sign)*0.2+(direction - severity_sign)*0.8)
+	
 	px.set_motor_speed(1, left_power)	# The motors are mounted physically opposing one another.
 	px.set_motor_speed(2, right_power)	# Setting the speeds equal results in counter rotation
+	
+	# It has been decided that time.sleep() will be set to a fixed 0.5 second.
+	# This allows for sensor checks while still giving the vehicle enough time to move.
+		############################################################################
+		# In the future it may be a good idea to integrate sensor readings into this
+		# loop. Maybe even turn the loop into its own fis control routine
+		############################################################################ 
+	time.sleep(0.5)
+	px.stop()
 	
     def main():
     px = Picarx()
