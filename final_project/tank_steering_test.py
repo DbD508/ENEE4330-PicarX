@@ -6,7 +6,81 @@ POWER = 30
 SAFE_DISTANCE = 50
 DANGER_DISTANCE = 30
 
-def main():
+def torque_vectored_steering(severity: float, direction: str):
+	"""Executes a torque-vectored steering maneuver. The intention of this function is to reduce the turning radius of the picar as much as possible.
+		Args:
+			severity: x in X={-100:100}, X =! 0. Specifies the severity of the steering. Positive values will result in net forward motion, while negative vaues will result in net backward motion. Note: if abs(severity)>100, input will be clamped. If severity = 0, function will not run.
+			direction: 'left' produces a left turn, while 'right' produces a right turn (relative to forward motion).
+
+		Returns:
+			None. This is a hardware command
+
+		Raises:
+			NameError: 'direction' is not 'right' or 'left'
+			TypeError: 'severity' is not 'float' or 'direction' is not 'string'
+    """
+    # Error Handling
+    if severity = 0:
+		return
+    if type(severity) != float:
+		raise TypeError('Invalid function input: allowable datatype for severity is float')
+	if type(direction) != str:
+		raise TypeError('Invalid function input: allowable datatype for direction is string')
+	if direction != 'right' or direction != 'left':
+		raise NameError('Invalid function input: valid directions are left and right')
+
+	# 				"IO table" 
+	#		(F=forward, R=Reverse, l=left, r=right)
+	#			F-l		F-r		R-l		R-r
+	# Wheels	l		r		r		l
+	# rMotor	F		R		F		R
+	# lMotor	R		F		R		F
+	
+	# If this is broken out into individual logical equations,
+		# Output: wheels left. Input: desired direction
+			# Wheels,l = F-l or R-r							(1)
+		# Output: rMotor forward. Input: desired direction
+			# rMotor,F = l									(2)
+		# Output: lMotor forward. Input: desired direction
+			# lMotor,F = r									(3)
+
+		# First, severity must be clamped to +/- 100
+	severity_clamped=max(-100, min(severity, 100))
+		# We will assign 1 = forward, -1 = reverse
+	direction = severity*(severity**2)**(-1/2) # severity/abs(severity)=sign(severity)
+		# Now we assign -1 = left and 1 = right
+	if direction = right:
+		angle_modifier = 1
+	else:
+		angle_modifier = -1
+		
+		# Referring to (1), and with the knowledge that negative servo 
+		# angle corresponds to "wheels, left", we can create a simple 
+		# assignment for the steering angle
+	angle = angle_modifier*direction*DIR_MAX	# macro encodes +/-30 degree limit
+	px.set_dir_servo_angle(angle)				# Set steering servo angle
+	
+	# The motors are mounted physically opposing one another, so setting
+	# the power of each side with the same sign will result in rotation.
+	# However, to compensate for the fact that this is not true tank
+	# steering, the inner wheel's power will be increased relative to 
+	# the outer wheel. Expanding the "IO Table" alreay developed:
+	
+	# 				"Augmented IO table" 
+	#		(F=forward, R=Reverse, l=left, r=right)
+	#			F-l		F-r		R-l		R-r
+	# rMotor	F		R+		F+		R
+	# lMotor	R+		F		R		F+
+
+	# 
+	
+	# Now we will set each wheel's power:
+	left_power  = 
+	right_power = 
+	px.set_motor_speed(1, left_power)	# The motors are mounted physically opposing one another.
+	px.set_motor_speed(2, right_power)	# Setting the speeds equal results in counter rotation
+	
+    def main():
     px = Picarx()
     
     try:
@@ -14,13 +88,14 @@ def main():
                     px.set_dir_servo_angle(0)
                     px.forward(POWER/2)
                     time.sleep(1.5)
-                    px.set_dir_servo_angle(30)
-                    px.set_motor_speed(1, 80)
-                    px.set_motor_speed(2, 80)
+                    
+                    
+                    
                     time.sleep(1)
-                    px.set_dir_servo_angle(-30)
-                    px.set_motor_speed(1, -80)
-                    px.set_motor_speed(2, -80)
+                    # This part works better than the previous one. This is probably just because of the car's physical limitations.
+                    px.set_dir_servo_angle(-30)	# 
+                    px.set_motor_speed(1, -80)	# 
+                    px.set_motor_speed(2, -80)	# 
                     time.sleep(1)
                     
     except KeyboardInterrupt:
