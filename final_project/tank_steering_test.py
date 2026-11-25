@@ -22,8 +22,8 @@ def torque_vectored_steering(severity: float, direction: str):
     # Error Handling
     if severity == 0:
 		return
-    if type(severity) != float:
-		raise TypeError('Invalid function input: allowable datatype for severity is float')
+    if type(severity) != float or !=int:
+		raise TypeError('Invalid function input: allowable datatypes for severity are int or float')
 	if type(direction) != str:
 		raise TypeError('Invalid function input: allowable datatype for direction is string')
 	if direction != 'right' and direction != 'left':
@@ -104,14 +104,10 @@ def torque_vectored_steering(severity: float, direction: str):
                     px.forward(POWER/2)
                     time.sleep(1.5)
                     
-                    
-                    
-                    time.sleep(1)
-                    # This part works better than the previous one. This is probably just because of the car's physical limitations.
-                    px.set_dir_servo_angle(-30)	# 
-                    px.set_motor_speed(1, -80)	# 
-                    px.set_motor_speed(2, -80)	# 
-                    time.sleep(1)
+                    torque_vectored_steering(80, 'right')
+                    torque_vectored_steering(80, 'left')
+                    torque_vectored_steering(-80, 'right')
+                    torque_vectored_steering(-80, 'left')
                     
     except KeyboardInterrupt:
         print("Stopping obstacle avoidance")
