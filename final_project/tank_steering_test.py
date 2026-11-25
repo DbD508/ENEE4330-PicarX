@@ -81,7 +81,7 @@ def torque_vectored_steering(severity: float, direction: str):
     # Now, using the logical variables for steering which assigned 1 to
     # Forward and right, and -1 to Reverse and left:	
     left_power  = severity_clamped*((angle_modifier + severity_sign)*0.2+(angle_modifier - severity_sign)*0.8)
-    right_power = severity_clamped*((direction + severity_sign)*0.2+(direction - severity_sign)*0.8)
+    right_power = severity_clamped*((severity_sign + angle_modifier)*0.2+(severity_sign - angle_modifier)*0.8)
     
     px.set_motor_speed(1, left_power)	# The motors are mounted physically opposing one another.
     px.set_motor_speed(2, right_power)	# Setting the speeds equal results in counter rotation
