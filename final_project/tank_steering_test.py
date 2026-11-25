@@ -22,13 +22,13 @@ def torque_vectored_steering(severity: float, direction: str):
     # Error Handling
     if severity == 0:
         return
-    if type(severity) != float or !=int:
+    if type(severity) != float and type(severity) != int:
         raise TypeError('Invalid function input: allowable datatypes for severity are int or float')
     if type(direction) != str:
         raise TypeError('Invalid function input: allowable datatype for direction is string')
     if direction != 'right' and direction != 'left':
         raise NameError('Invalid function input: valid directions are left and right')
-    
+    px=Picarx()
     # 				"IO table" 
     #		(F=forward, R=Reverse, l=left, r=right)
     #			F-l		F-r		R-l		R-r
@@ -57,7 +57,7 @@ def torque_vectored_steering(severity: float, direction: str):
     	# Referring to (1), and with the knowledge that negative servo 
     	# angle corresponds to "wheels, left", we can create a simple 
     	# assignment for the steering angle
-    angle = angle_modifier*severity_sign*DIR_MAX	# macro encodes +/-30 degree limit
+    angle = angle_modifier*severity_sign*30		# +/-30 degree limit is hardcoded, but we will be careful here
     px.set_dir_servo_angle(angle)				# Set steering servo angle
     
     # The motors are mounted physically opposing one another, so setting
@@ -95,7 +95,7 @@ def torque_vectored_steering(severity: float, direction: str):
     time.sleep(0.5)
     px.stop()
 	
-    def main():
+def main():
     px = Picarx()
     
     try:
